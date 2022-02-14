@@ -1,4 +1,5 @@
 import sys
+import math
 
 try:
     from OpenGL.GLUT import *
@@ -17,6 +18,11 @@ except:
 
 DISPLAY_WIDTH = 500.0
 DISPLAY_HEIGHT = 500.0
+CAM_X = 0.0
+CAM_Y = 3.0
+CAM_Z = 20.0
+angle = 0.0
+ortho = False
 
 def init(): 
     glClearColor (0.0, 0.0, 0.0, 0.0)
@@ -76,26 +82,89 @@ def drawHouse ():
 def display():
     glClear (GL_COLOR_BUFFER_BIT)
     glColor3f (1.0, 1.0, 1.0)
-    # viewing transformation 
+    # viewing transformation
+    global DISPLAY_WIDTH, DISPLAY_HEIGHT, CAM_Z, CAM_X, CAM_Y, angle, ortho
 
-    
-    #Your Code Here
-    
-    
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    glTranslated(-CAM_X, -CAM_Y, -CAM_Z)
+    glRotated(angle, 0.0, 1.0, 0.0)
+
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    if ortho:
+        # glOrtho(0.0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT, 0.0, 1.0)
+        glOrtho(-10,10,-10,10,-100,100)
+    else:
+        gluPerspective(60.0,1.0,0.0,100.0)
+
     drawHouse()
 
-    
     glFlush()
     
 
 def keyboard(key, x, y):
-    
+    global CAM_X, CAM_Y, CAM_Z, angle, ortho
+
     if key == chr(27):
         import sys
         sys.exit(0)
   
-    if key == b'w':
-        print("W is pressed")
+    elif key == b'w':
+        # print("key pressed")
+        # CAM_Z += math.sin(angle)
+        # CAM_X += math.cos(angle)
+        CAM_Z -= 1
+
+    elif key == b's':
+        # print("key pressed")
+        # CAM_Z -= math.sin(angle)
+        # CAM_X -= math.cos(angle)
+        CAM_Z += 1
+
+    elif key == b'a':
+        # print("key pressed")
+        # CAM_X -= math.cos(angle)
+        # CAM_Z -= math.sin(angle)
+        CAM_X -= 1
+
+    elif key == b'd':
+        # print("key pressed")
+        # CAM_X += math.cos(angle)
+        # CAM_Z += math.cos(angle)
+        CAM_X += 1
+
+    elif key == b'r':
+        # print("key pressed")
+        CAM_Y += 1
+
+    elif key == b'f':
+        # print("key pressed")
+        CAM_Y -= 1
+
+    elif key == b'q':
+        # print("key pressed")
+        angle -= 5
+
+    elif key == b'e':
+        # print("key pressed")
+        angle += 5
+
+    elif key == b'h':
+        # print("key pressed")
+        CAM_X = 0.0
+        CAM_Y = 3.0
+        CAM_Z = 20.0
+        angle = 0.0
+        ortho = False
+
+    elif key == b'o':
+        # print("key pressed")
+        ortho = True
+
+    elif key == b'p':
+        # print("key pressed")
+        ortho = False
   
     #Your Code Here
   
